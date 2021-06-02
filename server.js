@@ -19,6 +19,9 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.use(express.urlencoded({extended: false}));
+app.use(express.json())
+
 // Set static files
 app.use(express.static('public'));
 

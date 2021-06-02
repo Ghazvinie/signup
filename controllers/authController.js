@@ -1,5 +1,6 @@
-function signUpPost(req, res, next) {
-    res.send('ehhlo');
+function signUpPost(req, res) {
+    console.log(req.body)
+    
 }
 
 module.exports = { signUpPost };
