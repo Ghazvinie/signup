@@ -11,10 +11,15 @@
 
 <body>
     <form action="/auth/signup" method="POST" name="signup">
+        <h3>
+            Please enter your details to register as a new user
+        </h3>
         <label for="username">Username</label>
-        <input type="text" id="username" name="username"><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" required><br>
         <label for="password">Password</label>
-        <input type="password" id="password" name="password"><br>
+        <input type="password" id="password" name="password" required><br>
         <button>Sign Up!</button>
     </form>
 </body>

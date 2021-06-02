@@ -1,5 +1,5 @@
 function signUpPost(req, res, next) {
-        res.send('ehhlo');
-    }
+    res.send('ehhlo');
+}
 
-module.exports = {signUpPost}
+module.exports = { signUpPost };
