@@ -3,7 +3,7 @@ const UserModel = require('../models/userSchema');
 
 function signUpPost(req, res) {
     const {username, email, password} = req.body;
-    console.log(username, email, password)
+    console.log(username, email, password);
 
 }
 
