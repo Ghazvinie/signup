@@ -8,16 +8,26 @@ The app allows a user to create a profile providing an email, username and passw
 - JavaScript
 - NodeJs / Express
 - HTML / CSS
-- MonoDB / Mongoose
+- MongoDB / Mongoose
 - Bcrypt / JWT
 
 ### To run:
 
 ```
-### $ npm install
+$ npm install
 ```
 
 ```
 $ npm run start
 ```
 
+```
+app is now accessible from localhost
+````
+
+You will need to provide your own MongoDB URI in environmental variables (process.env.MONG_URI).
+
+### Tests
+
+
+### License 
