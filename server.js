@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.render('signup');
+    res.render('index');
 });
 
 app.use('/auth', authRouter);

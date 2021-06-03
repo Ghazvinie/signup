@@ -9,7 +9,7 @@ function signUpPost(req, res) {
 }
 
 function signInGet(req, res) {
-    res.send('signIn');
+    res.render('signIn');
 }
 function signInPost(req, res) {
     res.send('SignIN Post');

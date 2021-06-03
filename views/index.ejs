@@ -10,13 +10,18 @@
 </head>
 
 <body>
-    <form action="/auth/signup" method="POST" name="signup">
-        <h3>
-            Sign in, or sign up
-        </h3>
-        <a href="/auth/signin"><button>Sign In</button></a>
-        <a href="/auth/signup"><button>Sign Up</button></a>
+    <h3>
+        Sign in, or sign up
+    </h3>
+    <form>
+        <div class="btn-div">
+            <button type="submit" formaction="/auth/signin">Sign In</button>
+        </div>
+        <div class="btn-div">
+            <button type="submit" formaction="/auth/signup">Sign Up</button>
+        </div>
     </form>
+
 </body>
 
 </html>
