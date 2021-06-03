@@ -21,7 +21,7 @@ $ npm install
 $ npm run start
 ```
 
-The app is now accessible from localhost://[YOUR_PORT]
+The app is now accessible from localhost:[YOUR_PORT]
 
 You will need to provide your own MongoDB URI in environmental variables (process.env.MONG_URI).
 
