@@ -13,7 +13,7 @@
     <h3>
         Please enter your details to sign in
     </h3>
-    <form action="/auth/signup" method="POST" name="signup">
+    <form action="/auth/signin" method="POST" name="signup">
         <label for="usernameEmail">Username or Email</label>
         <input type="text" id="usernameEmail" name="usernameEmail" required><br>
         <label for="password">Password (min 6 characters)</label>
@@ -21,5 +21,29 @@
         <button>Sign In</button>
     </form>
 </body>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/auth/signin', {
+                method: 'post',
+                body: JSON.stringify(Object.fromEntries(formData)),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            const data = await response.json();
+            if (data) {
+                location.assign('/auth/dashboard');
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    })
+</script>
+
 
 </html>
