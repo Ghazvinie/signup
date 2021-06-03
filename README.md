@@ -13,7 +13,7 @@ The app allows a user to create a profile providing an email, username and passw
 
 ### To run:
 
-```bash
-npm install
-```
+``
+$ npm install
+``
 
