@@ -1,10 +1,21 @@
 const UserModel = require('../models/userSchema');
 
-
-function signUpPost(req, res) {
-    const {username, email, password} = req.body;
-    console.log(username, email, password);
-
+function signUpGet(req, res) {
+    res.render('signUp');
 }
 
-module.exports = { signUpPost };
+function signUpPost(req, res) {
+    res.send('SignUp Post');
+}
+
+function signInGet(req, res) {
+    res.send('signIn');
+}
+function signInPost(req, res) {
+    res.send('SignIN Post');
+}
+function dashboardGet(req, res) {
+    res.send('dashboard');
+}
+
+module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet };

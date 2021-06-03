@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <form action="/auth/signup" method="POST" name="signup">
+        <h3>
+            Please enter your details to sign in
+        </h3>
+        <label for="usernameEmail">Username or Email</label>
+        <input type="text" id="usernameEmail" name="usernameEmail" required><br>
+        <label for="password">Password (min 6 characters)</label>
+        <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
+        <button>Sign In</button>
+    </form>
+</body>
+
+</html>
