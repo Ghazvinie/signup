@@ -9,18 +9,13 @@ function signUpGet(req, res) {
 async function signUpPost(req, res) {
     // Get form data
     const { username, email, password } = req.body;
-    const  isAdmin  = req.body.isAdmin ? true : false;
-    console.log(isAdmin);
+    const isAdmin = req.body.isAdmin ? true : false;
 
     try {
         // Save user to database
-        // await UserModel.create({ username, email, password, isAdmin }, (err) => {
-        //     if (err) {
-        //         // --------------- ADD ERROR HANDLING ---------------------
-        //         console.log(err);
-        //     }
-        
-        // });
+        const user = await UserModel.create({ username, email, password, isAdmin });
+        res.status(201).json({ user });
+
     } catch (error) {
 
     }
