@@ -4,8 +4,18 @@ function signUpGet(req, res) {
     res.render('signUp');
 }
 
-function signUpPost(req, res) {
-    res.send('SignUp Post');
+async function signUpPost(req, res) {
+    const { username, email, password } = req.body;
+
+    try {
+        await UserModel.create({username, email, password}, (err) => {
+            if (err) console.log(err);
+            res.json('hello')
+        });
+    } catch (error) {
+        
+    }
+
 }
 
 function signInGet(req, res) {
