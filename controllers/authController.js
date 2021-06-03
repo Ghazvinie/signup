@@ -1,19 +1,28 @@
 const UserModel = require('../models/userSchema');
+const errorHandler = require('../utils/errorHandler');
 
 function signUpGet(req, res) {
-    res.render('signUp');
+    res.status(200).render('signUp');
 }
 
+// User sign up
 async function signUpPost(req, res) {
+    // Get form data
     const { username, email, password } = req.body;
+    const  isAdmin  = req.body.isAdmin ? true : false;
+    console.log(isAdmin);
 
     try {
-        await UserModel.create({username, email, password}, (err) => {
-            if (err) console.log(err);
-            res.json('hello')
-        });
-    } catch (error) {
+        // Save user to database
+        // await UserModel.create({ username, email, password, isAdmin }, (err) => {
+        //     if (err) {
+        //         // --------------- ADD ERROR HANDLING ---------------------
+        //         console.log(err);
+        //     }
         
+        // });
+    } catch (error) {
+
     }
 
 }

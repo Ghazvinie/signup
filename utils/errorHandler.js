@@ -1,5 +1,3 @@
-function erroHandler(err) {
-
+function errorHandler(error) {
+    
 }
-
-module.exports = erroHandler;
