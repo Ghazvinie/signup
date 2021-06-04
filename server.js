@@ -21,7 +21,7 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // Middleware
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
