@@ -4,8 +4,7 @@ const bcrypt = require('bcrypt');
 
 
 function signUpGet(req, res) {
-    // res.set('Content-Type', 'application/javascript');
-    // res.status(200).render('signUp');
+    res.status(200).render('signUp');
 }
 
 // User sign up
@@ -20,10 +19,10 @@ async function signUpPost(req, res) {
         const user = await UserModel.create({ username, email, password, isAdmin });
         const redirect = '/auth/signin';
         res.status(201).json({ user, redirect });
-    } catch (err) {
+    } catch (error) {
         // Handle any errors
-        const error = errorHandler(err);
-        res.status(400).json({ error });
+        const err = errorHandler(error);
+        res.status(400).json({ err });
     }
 }
 

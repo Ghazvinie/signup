@@ -15,8 +15,10 @@
     </h3>
     <form action="/auth/signup" method="POST" name="signup">
         <label for="username">Username</label>
+        <div class='usernameError error'></div>
         <input type="text" id="username" name="username" required><br>
         <label for="email">Email</label>
+        <div class='emailError error'></div>
         <input type="email" id="email" name="email" required><br>
         <label for="password">Password (min 6 characters)</label>
         <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
@@ -38,9 +40,16 @@
                 headers: { 'Content-Type': 'application/json' }
             })
             const data = await response.json();
-            if (data) {
-                location.assign(data.redirect);
+            if (data.err) {
+                const usernameError = document.querySelector('.usernameError');
+                const emailError = document.querySelector('.emailError');
+                usernameError.textContent = `Username ${data.err.username} is already taken`;
+                emailError.textContent = `Email ${data.err.email} is already taken`;
+                return;
             }
+            // if (data) {
+            //     location.assign(data.redirect);
+            // }
 
         } catch (error) {
             console.log(error);
