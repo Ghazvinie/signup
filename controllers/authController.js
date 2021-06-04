@@ -50,7 +50,7 @@ async function signInPost(req, res) {
                 const { username, email } = user;
                 res.status(200).json({ username, email, redirect });
             } else {
-                throw Error('Incorrect password')
+                throw Error('Incorrect password');
             }
         } else {
             throw Error ('Username or email incorrect');
