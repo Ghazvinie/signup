@@ -53,12 +53,12 @@ async function signInPost(req, res) {
                 throw Error('Incorrect password');
             }
         } else {
-            throw Error ('Incorrect username or email');
+            throw Error('Incorrect username or email');
         }
 
     } catch (error) {
         const err = errorHandler(error);
-        res.json({err});
+        res.json({ err });
 
     }
 }
