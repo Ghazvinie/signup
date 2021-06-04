@@ -43,8 +43,8 @@
             if (data.err) {
                 const usernameError = document.querySelector('.usernameError');
                 const emailError = document.querySelector('.emailError');
-                usernameError.textContent = `Username ${data.err.username} is already taken`;
-                emailError.textContent = `Email ${data.err.email} is already taken`;
+                usernameError.textContent = data.err.username ? `Username ${data.err.username} is already taken` : '';
+                emailError.textContent = data.err.email ? `Email ${data.err.email} is already taken` : '';
                 return;
             }
             // if (data) {
