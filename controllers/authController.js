@@ -18,16 +18,18 @@ async function signUpPost(req, res) {
         // Save user to database
         const user = await UserModel.create({ username, email, password, isAdmin });
         const redirect = '/auth/signin';
-        res.status(201).json({ user, redirect });
+        req.flash('user', user.username);
+        res.status(201).json({ redirect });
     } catch (error) {
-        // Handle any errors
+        // Error with saving to database
         const err = errorHandler(error);
+        // Pass error on
         res.status(400).json({ err });
     }
 }
 
 async function signInGet(req, res) {
-    res.render('signIn');
+    res.render('signIn', {message: req.flash('user')});
 }
 
 // User sign in POST
@@ -47,18 +49,21 @@ async function signInPost(req, res) {
             if (userValid) {
                 const redirect = '/auth/dashboard';
                 const { username, email } = user;
+
                 res.status(200).json({ username, email, redirect });
             } else {
+                // Password invalid
                 throw Error('Incorrect password');
             }
         } else {
+            // User doesn't exist / incorrect username or password
             throw Error('Incorrect username or email');
         }
-
     } catch (error) {
+        // Handles error
         const err = errorHandler(error);
+        // Pass error on
         res.json({ err });
-
     }
 }
 function dashboardGet(req, res) {

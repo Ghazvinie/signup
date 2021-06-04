@@ -1,6 +1,8 @@
 const dotenv = require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 // Router
 const authRouter = require('./routes/authRouter');
@@ -24,6 +26,17 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Connect flash
+app.use(flash());
+
+// Express session
+app.use(
+    session({
+      secret: 'secret',
+      resave: true,
+      saveUninitialized: true
+    })
+  );
 
 // Set static files
 app.use(express.static(__dirname + '/public'));

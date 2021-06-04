@@ -11,7 +11,7 @@
 
 <body>
     <h3>
-        Please enter your details to register as a new user
+        Please enter your details to register as a new user...
     </h3>
     <form action="/auth/signup" method="POST" name="signup">
         <label for="username">Username</label>
@@ -47,9 +47,9 @@
                 emailError.textContent = data.err.email ? `Email ${data.err.email} is already taken` : '';
                 return;
             }
-            // if (data) {
-            //     location.assign(data.redirect);
-            // }
+            if (data.redirect) {
+                location.assign(data.redirect);
+            }
 
         } catch (error) {
             console.log(error);

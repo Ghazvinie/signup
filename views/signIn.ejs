@@ -12,7 +12,10 @@
 
 <body>
     <h3>
-        Please enter your details to sign in
+        <% if (message != '') { %>
+           Welcome, <%= message %>.
+       <% } %>
+        Please enter your details to sign in...
     </h3>
 
     <form action="/auth/signin" method="POST" name="signup">
@@ -43,9 +46,12 @@
                 if (data.err) {
                     const emailError = document.querySelector('.emailError');
                     const passwordError = document.querySelector('.passwordError');
-                    emailError.textContent = data.err.email
-                    passwordError.textContent = data.err.password
+                    emailError.textContent = data.err.email;
+                    passwordError.textContent = data.err.password;
+                }
 
+                if (data.redirect){
+                    location.assign(data.redirect);
                 }
 
             } catch (error) {
