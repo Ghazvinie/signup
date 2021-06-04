@@ -49,3 +49,9 @@ form{
     display: inline-block;
     padding: 0 45px;
   }
+  .error{
+    color:red;
+    margin: 10px 2px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }

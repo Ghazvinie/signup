@@ -2,8 +2,10 @@ const UserModel = require('../models/userSchema');
 const errorHandler = require('../utils/errorHandler');
 const bcrypt = require('bcrypt');
 
+
 function signUpGet(req, res) {
-    res.status(200).render('signUp');
+    // res.set('Content-Type', 'application/javascript');
+    // res.status(200).render('signUp');
 }
 
 // User sign up
@@ -16,7 +18,8 @@ async function signUpPost(req, res) {
     try {
         // Save user to database
         const user = await UserModel.create({ username, email, password, isAdmin });
-        res.status(201).json({ user });
+        const redirect = '/auth/signin';
+        res.status(201).json({ user, redirect });
     } catch (err) {
         // Handle any errors
         const error = errorHandler(err);
@@ -27,20 +30,36 @@ async function signUpPost(req, res) {
 async function signInGet(req, res) {
     res.render('signIn');
 }
+
+// User sign in POST
 async function signInPost(req, res) {
     const { usernameEmail, password } = req.body;
+    // Allow for searching by username or email
     const $or = [{ email: usernameEmail }, { username: usernameEmail }];
 
 
     try {
+        // Find user
         const user = await UserModel.findOne({ $or });
-        const userValid = await bcrypt.compare(password, user.password);
-        if (userValid) {
-            const { username, email } = user;
-            res.status(200).json({ username, password });
+        // Hash password
+        if (user) {
+            const userValid = await bcrypt.compare(password, user.password);
+            // If password valid
+            if (userValid) {
+                const redirect = '/auth/dashboard';
+                const { username, email } = user;
+                res.status(200).json({ username, email, redirect });
+            } else {
+                throw Error('Incorrect password')
+            }
+        } else {
+            throw Error ('Username or email incorrect');
         }
+
     } catch (error) {
-        // console.log(error);
+        console.log(error.message);
+        res.json({error: error.message});
+
     }
 }
 function dashboardGet(req, res) {

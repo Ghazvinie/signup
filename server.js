@@ -24,8 +24,9 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
+
 // Set static files
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 // Root route
 app.get('/', (req, res) => {
