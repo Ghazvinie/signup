@@ -50,6 +50,7 @@ async function signInPost(req, res) {
                 const redirect = '/auth/dashboard';
                 const { username, email } = user;
 
+                req.flash('userDetails', username);
                 res.status(200).json({ username, email, redirect });
             } else {
                 // Password invalid
@@ -67,7 +68,14 @@ async function signInPost(req, res) {
     }
 }
 function dashboardGet(req, res) {
-    res.render('dashboard');
+    res.render('dashboard', {message: req.flash('userDetails')});
 }
 
-module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet };
+function dashboardPost(req, res) {
+    const {oldPassword, newPassword} = req.body;
+    console.log(req.flash('userDetails'));
+
+    res.render('dashboard', {message: req.flash('userDetails')});
+}
+
+module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, dashboardPost };

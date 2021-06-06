@@ -10,9 +10,78 @@
 </head>
 
 <body>
-<table>
-    Welcome to your dashboard
-</table>
+    <div id="dashboardHeader">
+        <h1>
+            <% if (message !='' ) { %>
+                Welcome, <%= message %>.
+                    <% } %>
+        </h1>
+        <h2>This is your dashboard</h2>
+    </div>
+
+    <form action="/auth/dashboard" method="POST" name="signup">
+        <label for="oldPassword">Old password</label>
+        <div class='oldPasswordError error'></div>
+        <input type="password" id="oldPassword" name="oldPassword" required><br>
+        <label for="newPassword">New password (min 6 characters)</label>
+        <div class='retypeError error'></div>
+        <input type="password" id="newPassword" name="newPassword" required pattern="^.{6,25}$"><br>
+        <label for="newPassword">Retype password</label>
+        <div class='retypeError error'></div>
+        <input type="password" id="newPassword" name="newPassword" required><br>
+        <button>Sign In</button>
+    </form>
+
+
+
+    <script>
+        const retypeError = document.querySelectorAll('.retypeError');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            // Get form data
+            const formData = new FormData(form);
+            // Get passwords
+            const passwords = formData.getAll('newPassword');
+       
+            // Clear errors
+            retypeError.forEach(element => element.textContent = '');
+
+            // Check passwords match
+            if (passwords[0] !== passwords[1]) {
+                retypeError.forEach(element => element.textContent = 'Passwords do not match')
+                return;
+            }
+
+            try {
+                // POST form data
+                const response = await fetch(form.action, {
+                    method: 'post',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                // Parse response data
+                const data = await response.json();
+
+                // Show password error
+                if (data.err) {
+                    const passwordError = document.querySelector('.passwordError');
+                    passwordError.textContent = data.err.password;
+                }
+
+                // Redirect 
+                if (data.redirect) {
+                    location.assign(data.redirect);
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+    </script>
 </body>
 
 </html>

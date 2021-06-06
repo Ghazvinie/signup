@@ -55,3 +55,6 @@ form{
     font-size: 0.9em;
     font-weight: bold;
   }
+  #dashboardHeader{
+    text-align: center;
+  }
