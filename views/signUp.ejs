@@ -21,17 +21,32 @@
         <div class='emailError error'></div>
         <input type="email" id="email" name="email" required><br>
         <label for="password">Password (min 6 characters)</label>
+        <div class='retypeError error'></div>
         <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
+        <label for="passwordRetype">Retype Password</label>
+        <div class='retypeError error'></div>
+        <input type="password" id="passwordRetype" name="password" required><br>
         <label for="isAdmin">Make Admin?</label>
         <input type="checkbox" id="isAdmin" name="isAdmin">
         <button type="submit">Sign Up!</button>
     </form>
 </body>
 <script>
+
     const form = document.querySelector('form');
+
+
     form.addEventListener('submit', async e => {
         e.preventDefault();
+        
         const formData = new FormData(form);
+        const passwords = formData.getAll('password');
+
+        if (passwords[0] !== passwords[1]){
+            const retypeError = document.querySelectorAll('.retypeError');
+            retypeError.forEach(element => element.textContent = 'Passwords do not match')
+            return;
+        }
 
         try {
             const response = await fetch(form.action, {

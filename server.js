@@ -32,7 +32,7 @@ app.use(flash());
 // Express session
 app.use(
     session({
-      secret: 'secret',
+      secret: process.env.SECRET,
       resave: true,
       saveUninitialized: true
     })
