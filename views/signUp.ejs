@@ -32,13 +32,10 @@
     </form>
 </body>
 <script>
-
     const form = document.querySelector('form');
-
-
     form.addEventListener('submit', async e => {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
         const passwords = formData.getAll('password');
 
