@@ -2,7 +2,7 @@ const UserModel = require('../models/userSchema');
 const errorHandler = require('../utils/errorHandler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {generateJWT} = require('../middleware/jwtMiddleware');
+const { generateJWT } = require('../middleware/jwtMiddleware');
 
 
 
@@ -51,12 +51,11 @@ async function signInPost(req, res) {
             const userValid = await bcrypt.compare(password, user.password);
             if (userValid) {
                 const redirect = '/auth/dashboard';
-                const {_id, username} = user;
+                const { _id, username } = user;
                 const token = generateJWT(_id);
-                res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 3600 * 1000});
-
+                res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 3600 * 1000 });
                 req.flash('userDetails', username);
-                // res.status(200).json({ redirect });
+                res.status(200).json({ redirect });
             } else {
                 // Password invalid
                 throw Error('Incorrect password');
@@ -76,11 +75,34 @@ function dashboardGet(req, res) {
     res.render('dashboard', { message: req.flash('userDetails') });
 }
 
-function dashboardPost(req, res) {
+// Change password
+async function changePasswordPost(req, res) {
     const { oldPassword, newPassword } = req.body;
-    console.log(req.flash('userDetails'));
+    const { _id } = res.locals.user;
 
-    res.render('dashboard', { message: req.flash('userDetails') });
+    try {
+        // Find user
+        const user = await UserModel.findById(_id);
+        if (user) {
+            // Check passwords match
+            const userValid = await bcrypt.compare(oldPassword, user.password);
+            if (userValid) {
+                // Update password and save
+                user.password = newPassword;
+                user.save();
+                res.json({ user });
+            } else {
+                throw Error('Incorrect password');
+            }
+        } else {
+            throw Error('User not valid');
+        }
+    } catch (error) {
+        // Handles error
+        const err = errorHandler(error);
+        // Pass error on
+        res.json({ err });
+    }
 }
 
-module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, dashboardPost };
+module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswordPost };

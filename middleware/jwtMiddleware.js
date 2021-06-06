@@ -7,20 +7,35 @@ const publicKey = fs.readFileSync('./keys/public.key', 'utf8');
 
 function generateJWT(id) {
     try {
-        return jwt.sign({ id }, privateKey, {
+        return jwt.sign({ id }, 'secret', {
             expiresIn: '24h',
-            algorithm: 'HS512'
         });
     } catch (error) {
         console.log(error);
     }
+}
+
+function isUserAuth(req, res, next) {
+    const token = req.cookies.jwt;
+
+    if (token) {
+        jwt.verify(token, 'secret', (err, decodedToken) => {
+            if (err) {
+                res.redirect('/auth/signin');
+            } else {
+                next();
+            }
+        });
+    } else {
+        res.redirect('/auth/signin');
+    }
 
 }
 
-function verifyUserJWT(req, res, next) {
+function storeUserIfAuth(req, res, next) {
     const token = req.cookies.jwt;
     if (token) {
-        jwt.verify(token, publicKey, async (err, decodedToken) => {
+        jwt.verify(token, 'secret', async (err, decodedToken) => {
             if (err) {
                 // Handle error
                 res.locals.user = null;
@@ -37,4 +52,4 @@ function verifyUserJWT(req, res, next) {
     }
 }
 
-module.exports = { generateJWT, verifyUserJWT };
+module.exports = { generateJWT, isUserAuth, storeUserIfAuth };

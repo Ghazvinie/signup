@@ -16,10 +16,10 @@
                 Welcome, <%= message %>.
                     <% } %>
         </h1>
-        <h2>This is your dashboard</h2>
+        <h2 id="passwordSuccess">This is your dashboard</h2>
     </div>
 
-    <form action="/auth/dashboard" method="POST" name="changePassword">
+    <form action="/auth/changePassword" method="POST" name="changePassword">
         <label for="oldPassword">Old password</label>
         <div class='oldPasswordError error'></div>
         <input type="password" id="oldPassword" name="oldPassword" required><br>
@@ -67,13 +67,15 @@
 
                 // Show password error
                 if (data.err) {
-                    const passwordError = document.querySelector('.passwordError');
+                    const passwordError = document.querySelector('.oldPasswordError');
                     passwordError.textContent = data.err.password;
                 }
 
                 // Redirect 
-                if (data.redirect) {
-                    location.assign(data.redirect);
+                if (data.user) {
+                    const passwordSuccess = document.getElementById('passwordSuccess');
+                    passwordSuccess.innerText = 'Your password was updated!';
+                    document.querySelectorAll('input').forEach(element => element.value = '');
                 }
 
             } catch (error) {

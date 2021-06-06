@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const {verifyUserJWT} = require('./middleware/jwtMiddleware');
+const { storeUserIfAuth } = require('./middleware/jwtMiddleware');
 
 
 // Router
@@ -15,11 +15,11 @@ const app = express();
 
 // Connect to DB and server listen
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-    .then(() => {
-        console.log('Connected to the database...');
-        app.listen(3000, () => console.log('Server is listening on port 3000...'));
-    })
-    .catch(error => console.log('Database connection error' + error));
+  .then(() => {
+    console.log('Connected to the database...');
+    app.listen(3000, () => console.log('Server is listening on port 3000...'));
+  })
+  .catch(error => console.log('Database connection error' + error));
 
 // Set view engine
 app.set('views', './views');
@@ -35,22 +35,22 @@ app.use(flash());
 
 // Express session
 app.use(
-    session({
-      secret: process.env.SECRET,
-      resave: true,
-      saveUninitialized: true
-    })
-  );
+  session({
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
 // Set static files
 app.use(express.static(__dirname + '/public'));
 
 // Verify user's JWT on all routes
-app.use('*', verifyUserJWT);
+app.use('*', storeUserIfAuth);
 
 // Root route
 app.get('/', (req, res) => {
-    res.render('index');
+  res.render('index');
 });
 
 // /auth routes
