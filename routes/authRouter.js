@@ -1,5 +1,5 @@
 const authRouter = require('express').Router();
-const { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswordPost } = require('../controllers/authController');
+const { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswordPost, signOutGet } = require('../controllers/authController');
 const { isUserAuth } = require('../middleware/jwtMiddleware');
 
 authRouter.get('/signup', signUpGet);
@@ -13,5 +13,7 @@ authRouter.post('/signin', signInPost);
 authRouter.get('/dashboard', isUserAuth, dashboardGet);
 
 authRouter.post('/changePassword', isUserAuth, changePasswordPost);
+
+authRouter.get('/signout', signOutGet);
 
 module.exports = authRouter;

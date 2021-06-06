@@ -34,8 +34,7 @@ app.use(cookieParser());
 app.use(flash());
 
 // Express session
-app.use(
-  session({
+app.use(session({
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true

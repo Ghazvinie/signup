@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/styles/styles.css">
-</head>
+<%- include('partials/header'); -%>
 
 <body>
     <div id="dashboardHeader">
@@ -71,13 +62,14 @@
                     passwordError.textContent = data.err.password;
                 }
 
-                // Redirect 
+                // If success
                 if (data.user) {
                     const passwordSuccess = document.getElementById('passwordSuccess');
+                    // Display success
                     passwordSuccess.innerText = 'Your password was updated!';
+                    // Reset form values
                     document.querySelectorAll('input').forEach(element => element.value = '');
                 }
-
             } catch (error) {
                 console.log(error);
             }

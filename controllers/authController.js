@@ -105,4 +105,10 @@ async function changePasswordPost(req, res) {
     }
 }
 
-module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswordPost };
+function signOutGet(req, res) {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.locals.user = '';
+    res.redirect('/');
+}
+
+module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswordPost, signOutGet };
