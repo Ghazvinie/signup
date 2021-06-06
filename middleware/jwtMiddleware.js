@@ -2,17 +2,22 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const UserModel = require('../models/userSchema');
 
-const privateKey = fs.readFileSync('../keys/private.key', 'utf8');
-const publicKey = fs.readFileSync('../keys/public.key', 'utf8');
+const privateKey = fs.readFileSync('./keys/private.key', 'utf8');
+const publicKey = fs.readFileSync('./keys/public.key', 'utf8');
 
-function generateToken(id) {
-    return jwt.sign({ id }, privateKey, {
-        expiresIn: '24h',
-        algorithm: 'RS512'
-    });
+function generateJWT(id) {
+    try {
+        return jwt.sign({ id }, privateKey, {
+            expiresIn: '24h',
+            algorithm: 'HS512'
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
-function verifyToken(req, res, next) {
+function verifyUserJWT(req, res, next) {
     const token = req.cookies.jwt;
     if (token) {
         jwt.verify(token, publicKey, async (err, decodedToken) => {
@@ -32,4 +37,4 @@ function verifyToken(req, res, next) {
     }
 }
 
-module.exports = { generateToken, verifyToken };
+module.exports = { generateJWT, verifyUserJWT };

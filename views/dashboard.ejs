@@ -12,14 +12,14 @@
 <body>
     <div id="dashboardHeader">
         <h1>
-            <% if (message !='' ) { %>
+            <% if (message != '' ) { %>
                 Welcome, <%= message %>.
                     <% } %>
         </h1>
         <h2>This is your dashboard</h2>
     </div>
 
-    <form action="/auth/dashboard" method="POST" name="signup">
+    <form action="/auth/dashboard" method="POST" name="changePassword">
         <label for="oldPassword">Old password</label>
         <div class='oldPasswordError error'></div>
         <input type="password" id="oldPassword" name="oldPassword" required><br>

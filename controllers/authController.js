@@ -1,6 +1,9 @@
 const UserModel = require('../models/userSchema');
 const errorHandler = require('../utils/errorHandler');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const {generateJWT} = require('../middleware/jwtMiddleware');
+
 
 
 function signUpGet(req, res) {
@@ -18,6 +21,7 @@ async function signUpPost(req, res) {
         // Save user to database
         const user = await UserModel.create({ username, email, password, isAdmin });
         const redirect = '/auth/signin';
+
         req.flash('user', user.username);
         res.status(201).json({ redirect });
     } catch (error) {
@@ -29,7 +33,7 @@ async function signUpPost(req, res) {
 }
 
 async function signInGet(req, res) {
-    res.render('signIn', {message: req.flash('user')});
+    res.render('signIn', { message: req.flash('user') });
 }
 
 // User sign in POST
@@ -42,16 +46,17 @@ async function signInPost(req, res) {
     try {
         // Find user
         const user = await UserModel.findOne({ $or });
-        // Hash password
         if (user) {
+            // Check encrypted password
             const userValid = await bcrypt.compare(password, user.password);
-            // If password valid
             if (userValid) {
                 const redirect = '/auth/dashboard';
-                const { username, email } = user;
+                const {_id, username} = user;
+                const token = generateJWT(_id);
+                res.cookie('jwt', token, {httpOnly: true, maxAge: 24 * 3600 * 1000});
 
                 req.flash('userDetails', username);
-                res.status(200).json({ username, email, redirect });
+                // res.status(200).json({ redirect });
             } else {
                 // Password invalid
                 throw Error('Incorrect password');
@@ -68,14 +73,14 @@ async function signInPost(req, res) {
     }
 }
 function dashboardGet(req, res) {
-    res.render('dashboard', {message: req.flash('userDetails')});
+    res.render('dashboard', { message: req.flash('userDetails') });
 }
 
 function dashboardPost(req, res) {
-    const {oldPassword, newPassword} = req.body;
+    const { oldPassword, newPassword } = req.body;
     console.log(req.flash('userDetails'));
 
-    res.render('dashboard', {message: req.flash('userDetails')});
+    res.render('dashboard', { message: req.flash('userDetails') });
 }
 
 module.exports = { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, dashboardPost };

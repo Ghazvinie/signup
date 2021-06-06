@@ -3,6 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const {verifyUserJWT} = require('./middleware/jwtMiddleware');
+
 
 // Router
 const authRouter = require('./routes/authRouter');
@@ -25,6 +28,7 @@ app.set('view engine', 'ejs');
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Connect flash
 app.use(flash());
@@ -40,6 +44,9 @@ app.use(
 
 // Set static files
 app.use(express.static(__dirname + '/public'));
+
+// Verify user's JWT on all routes
+app.use('*', verifyUserJWT);
 
 // Root route
 app.get('/', (req, res) => {
