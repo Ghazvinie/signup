@@ -3,13 +3,13 @@ const { signUpGet, signUpPost, signInGet, signInPost, dashboardGet, changePasswo
 const { isUserAuth } = require('../middleware/jwtMiddleware');
 const csrf = require('csurf');
 
-const csrfProtection = csrf({cookie: false});
+const csrfProtection = csrf({ cookie: false });
 
 authRouter.get('/signup', signUpGet);
 
-authRouter.post('/signup', csrfProtection, signUpPost);
+authRouter.post('/signup', signUpPost);
 
-authRouter.get('/signin', signInGet);
+authRouter.get('/signin', csrfProtection, signInGet);
 
 authRouter.post('/signin', csrfProtection, signInPost);
 

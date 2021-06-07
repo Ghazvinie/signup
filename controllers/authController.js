@@ -33,7 +33,7 @@ async function signUpPost(req, res) {
 }
 
 async function signInGet(req, res) {
-    res.render('signIn', { message: req.flash('user') });
+    res.render('signIn', { message: req.flash('user'), csrfToken: req.csrfToken() });
 }
 
 // User sign in POST
@@ -106,6 +106,7 @@ async function changePasswordPost(req, res) {
 }
 
 function signOutGet(req, res) {
+    req.session = null;
     res.cookie('jwt', '', { maxAge: 1 });
     res.locals.user = '';
     res.redirect('/');

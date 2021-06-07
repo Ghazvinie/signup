@@ -37,7 +37,9 @@ app.use(flash());
 app.use(session({
     secret: process.env.SECRET,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    maxAge: 24 * 3600 * 1000,
+    httpOnly: true
   })
 );
 

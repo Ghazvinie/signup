@@ -1,58 +1,60 @@
 <%- include('partials/header'); -%>
 
-<body>
-    <h3>
-        <% if (message != '') { %>
-           Welcome, <%= message %>.
-       <% } %>
-        Please enter your details to sign in...
-    </h3>
+    <body>
+        <h3>
+            <% if (message !='' ) { %>
+                Welcome, <%= message %>.
+                    <% } %>
+                        Please enter your details to sign in...
+        </h3>
 
-    <form action="/auth/signin" method="POST" name="signup">
-        <label for="usernameEmail">Username or Email</label>
-        <div class='emailError error'></div>
-        <input type="text" id="usernameEmail" name="usernameEmail" required><br>
-        <label for="password">Password (min 6 characters)</label>
-        <div class='passwordError error'></div>
-        <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
-        <button>Sign In</button>
-    </form>
+        <form action="/auth/signin" method="POST" name="signup">
+            <label for="usernameEmail">Username or Email</label>
+            <div class='emailError error'></div>
+            <input type="text" id="usernameEmail" name="usernameEmail" required><br>
+            <label for="password">Password (min 6 characters)</label>
+            <div class='passwordError error'></div>
+            <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
+            <button>Sign In</button>
+            <meta name="csrf-token" content="<%= csrfToken %>">
+        </form>
 
-    <script>
+        <script>
 
-        const form = document.querySelector('form');
-        form.addEventListener('submit', async e => {
-            e.preventDefault();
-            const formData = new FormData(form);
+            const form = document.querySelector('form');
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            try {
-                const response = await fetch(form.action, {
-                    method: 'post',
-                    body: JSON.stringify(Object.fromEntries(formData)),
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                const data = await response.json();
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'post',
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        headers: { 'Content-Type': 'application/json', 'CSRF-Token': token }
+                    })
+                    const data = await response.json();
 
-                if (data.err) {
-                    const emailError = document.querySelector('.emailError');
-                    const passwordError = document.querySelector('.passwordError');
-                    emailError.textContent = data.err.email;
-                    passwordError.textContent = data.err.password;
+                    if (data.err) {
+                        const emailError = document.querySelector('.emailError');
+                        const passwordError = document.querySelector('.passwordError');
+                        emailError.textContent = data.err.email;
+                        passwordError.textContent = data.err.password;
+                    }
+
+                    if (data.redirect) {
+                        location.assign(data.redirect);
+                    }
+
+                } catch (error) {
+                    console.log(error);
                 }
+            });
 
-                if (data.redirect){
-                    location.assign(data.redirect);
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        });
-
-    </script>
-</body>
+        </script>
+    </body>
 
 
 
 
-</html>
+    </html>
