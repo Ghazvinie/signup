@@ -22,8 +22,11 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
   .catch(error => console.log('Database connection error' + error));
 
 // Set view engine
-app.set('views', './views');
+app.set('views', './public/views');
 app.set('view engine', 'ejs');
+
+// Set static files
+app.use(express.static(__dirname + '/public'));
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -45,9 +48,6 @@ app.use(session({
     }
   })
 );
-
-// Set static files
-app.use(express.static(__dirname + '/public'));
 
 // Verify user's JWT on all routes
 app.use('*', storeUserIfAuth);
