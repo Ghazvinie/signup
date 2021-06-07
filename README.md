@@ -2,14 +2,18 @@
 
 ## An app that allows a user to sign up with a few details. 
 
-The app allows a user to create a profile providing an email, username and password. The password is hashed before the user is stored in the database. When the user signs in and is authenticated, they are provided a JWT and authorised to access a dashboard page. If the user is set as an admin then they can also have access to a list of users.
+The app allows a user to sign up and access a protected resource.
+- User signs up with username, email and password. Password is hashed and along with other details stored to the database.
+- User can then sign in.
+- On successful user authentication, user is provided a JWT, authorising access to a dashboard.
+- Dashboard allows user to change password.
+- CSRF tokens are used to make sure user POST requests are genuine.
 
 ### Built with:
 - JavaScript
-- NodeJs / Express
+- NodeJs 10.19.0 / Express 4.17.1
 - HTML / CSS
-- MongoDB / Mongoose
-- Bcrypt / JWT
+- MongoDB / Mongoose 5.12.12
 
 ### To run:
 
