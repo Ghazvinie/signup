@@ -1,5 +1,5 @@
 function errorHandler(error) {
-    let errorObject = { email: '', password: '', username: '' }
+    let errorObject = { email: '', password: '', username: '' };
     if (error.message === 'Incorrect username or email') {
         errorObject.email = error.message;
     }
@@ -12,6 +12,10 @@ function errorHandler(error) {
         const key = Object.keys(error.keyValue)
         const value = Object.values(error.keyValue);
         errorObject[key] = value[0];
+    }
+
+    if (error.message = 'Generating JWT failed'){
+        errorObject.JWTError = error.message;
     }
 
     return errorObject;

@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const { generateJWT } = require('../middleware/jwtMiddleware');
 
 
-
+// User sign up GET
 function signUpGet(req, res) {
-    res.status(200).render('signUp');
+    res.status(200).render('signUp', { csrfToken: req.csrfToken() });
 }
 
-// User sign up
+// User sign up POST
 async function signUpPost(req, res) {
 
     // Get form data
@@ -20,8 +20,9 @@ async function signUpPost(req, res) {
     try {
         // Save user to database
         const user = await UserModel.create({ username, email, password, isAdmin });
+        // Set redirect url
         const redirect = '/auth/signin';
-
+        // Store username in flash
         req.flash('user', user.username);
         res.status(201).json({ redirect });
     } catch (error) {
@@ -32,8 +33,15 @@ async function signUpPost(req, res) {
     }
 }
 
+// User sign in GET
 async function signInGet(req, res) {
-    res.render('signIn', { message: req.flash('user'), csrfToken: req.csrfToken() });
+    // Set notSignedIn to false for any falsey value
+    const notSignedIn = req.session.notSignedIn ? true : false;
+    // Reset notSignedIn on req.session
+    req.session.notSignedIn = false;
+    // Render signIn view
+    res.render('signIn', { message: req.flash('user'), csrfToken: req.csrfToken(), notSignedIn });
+
 }
 
 // User sign in POST
@@ -49,11 +57,16 @@ async function signInPost(req, res) {
         if (user) {
             // Check encrypted password
             const userValid = await bcrypt.compare(password, user.password);
+            // If passwords match
             if (userValid) {
+                // Set redirect url
                 const redirect = '/auth/dashboard';
                 const { _id, username } = user;
+                // Generate JWT for user
                 const token = generateJWT(_id);
-                res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 3600 * 1000 });
+                // Store JWT in cookie
+                res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 3600 * 1000, sameSite: 'lax' });
+                // Set flash message
                 req.flash('userDetails', username);
                 res.status(200).json({ redirect });
             } else {
@@ -71,11 +84,13 @@ async function signInPost(req, res) {
         res.json({ err });
     }
 }
+
+// Dashboard GET
 function dashboardGet(req, res) {
-    res.render('dashboard', { message: req.flash('userDetails') });
+    res.render('dashboard', { message: req.flash('userDetails'), csrfToken: req.csrfToken() });
 }
 
-// Change password
+// Dashboard POST - change password
 async function changePasswordPost(req, res) {
     const { oldPassword, newPassword } = req.body;
     const { _id } = res.locals.user;
@@ -105,9 +120,11 @@ async function changePasswordPost(req, res) {
     }
 }
 
+// Sign out GET
 function signOutGet(req, res) {
+    // Clear session, jwt cookie and locals store of user
     req.session = null;
-    res.cookie('jwt', '', { maxAge: 1 });
+    res.clearCookie('jwt');
     res.locals.user = '';
     res.redirect('/');
 }

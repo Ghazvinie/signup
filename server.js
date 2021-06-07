@@ -38,8 +38,11 @@ app.use(session({
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
-    maxAge: 24 * 3600 * 1000,
-    httpOnly: true
+    httpOnly: true,
+    cookie: {
+      maxAge: 24 * 3600 * 1000,
+      sameSite: 'lax'
+    }
   })
 );
 

@@ -1,63 +1,83 @@
 <%- include('partials/header'); -%>
 
-<body>
-    <h3>
-        Please enter your details to register as a new user...
-    </h3>
-    <form action="/auth/signup" method="POST" name="signup">
-        <label for="username">Username</label>
-        <div class='usernameError error'></div>
-        <input type="text" id="username" name="username" required><br>
-        <label for="email">Email</label>
-        <div class='emailError error'></div>
-        <input type="email" id="email" name="email" required><br>
-        <label for="password">Password (min 6 characters)</label>
-        <div class='retypeError error'></div>
-        <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
-        <label for="passwordRetype">Retype Password</label>
-        <div class='retypeError error'></div>
-        <input type="password" id="passwordRetype" name="password" required><br>
-        <label for="isAdmin">Make Admin?</label>
-        <input type="checkbox" id="isAdmin" name="isAdmin">
-        <button type="submit">Sign Up!</button>
-    </form>
-</body>
-<script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
+    <body>
+        <h3>
+            Please enter your details to register as a new user...
+        </h3>
+        <form action="/auth/signup" method="POST" name="signup">
+            <label for="username">Username</label>
+            <div class='usernameError error'></div>
+            <input type="text" id="username" name="username" required><br>
+            <label for="email">Email</label>
+            <div class='emailError error'></div>
+            <input type="email" id="email" name="email" required><br>
+            <label for="password">Password (min 6 characters)</label>
+            <div class='retypeError error'></div>
+            <input type="password" id="password" name="password" required pattern="^.{6,25}$"><br>
+            <label for="passwordRetype">Retype Password</label>
+            <div class='retypeError error'></div>
+            <input type="password" id="passwordRetype" name="password" required><br>
+            <meta name="csrf-token" content="<%= csrfToken %>">
+        </form>
+    </body>
+    <script>
+        // Get form element
+        const form = document.querySelector('form');
 
-        const formData = new FormData(form);
+        // Get token
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Get passwords
         const passwords = formData.getAll('password');
 
-        if (passwords[0] !== passwords[1]){
-            const retypeError = document.querySelectorAll('.retypeError');
-            retypeError.forEach(element => element.textContent = 'Passwords do not match')
-            return;
-        }
+        // Get error elements
+        const usernameError = document.querySelector('.usernameError');
+        const emailError = document.querySelector('.emailError');
 
-        try {
-            const response = await fetch(form.action, {
-                method: 'post',
-                body: JSON.stringify(Object.fromEntries(formData)),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            const data = await response.json();
-            if (data.err) {
-                const usernameError = document.querySelector('.usernameError');
-                const emailError = document.querySelector('.emailError');
-                usernameError.textContent = data.err.username ? `Username ${data.err.username} is already taken` : '';
-                emailError.textContent = data.err.email ? `Email ${data.err.email} is already taken` : '';
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            // Get form data
+            const formData = new FormData(form);
+
+            // Clear errors
+            usernameError.textContent = '';
+            emailError.textContent = '';
+
+            // Check passwords match
+            if (passwords[0] !== passwords[1]) {
+                const retypeError = document.querySelectorAll('.retypeError');
+                retypeError.forEach(element => element.textContent = 'Passwords do not match')
                 return;
             }
-            if (data.redirect) {
-                location.assign(data.redirect);
+
+            try {
+                // POST form daata and token
+                const response = await fetch(form.action, {
+                    method: 'post',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: { 'Content-Type': 'application/json', 'CSRF-Token': token }
+                });
+                // Parse response data
+                const data = await response.json();
+
+                // Display any errors
+                if (data.err) {
+
+                    usernameError.textContent = data.err.username ? `Username ${data.err.username} is already taken` : '';
+                    emailError.textContent = data.err.email ? `Email ${data.err.email} is already taken` : '';
+                    return;
+                }
+                // Redirect on success
+                if (data.redirect) {
+                    location.assign(data.redirect);
+                }
+
+            } catch (error) {
+                console.log(error);
             }
+        });
 
-        } catch (error) {
-            console.log(error);
-        }
-    });
-</script>
+    </script>
 
-</html>
+    </html>

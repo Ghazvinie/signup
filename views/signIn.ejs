@@ -5,7 +5,10 @@
             <% if (message !='' ) { %>
                 Welcome, <%= message %>.
                     <% } %>
-                        Please enter your details to sign in...
+                        <% if (notSignedIn) { %>
+                            You need to be signed in to view your dashboard. <br><br>
+                            <% } %>
+                                Please enter your details to sign in...
         </h3>
 
         <form action="/auth/signin" method="POST" name="signup">
@@ -20,28 +23,41 @@
         </form>
 
         <script>
-
+            // Get form element
             const form = document.querySelector('form');
+
+            // Get error elements
+            const emailError = document.querySelector('.emailError');
+            const passwordError = document.querySelector('.passwordError');
+
             form.addEventListener('submit', async e => {
                 e.preventDefault();
+                // Get form data
                 const formData = new FormData(form);
+                // Get token 
                 const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+                // Clear errors
+                emailError.textContent = '';
+                passwordError.textContent = '';
+
                 try {
+                    // POST form data and token
                     const response = await fetch(form.action, {
                         method: 'post',
                         body: JSON.stringify(Object.fromEntries(formData)),
                         headers: { 'Content-Type': 'application/json', 'CSRF-Token': token }
-                    })
+                    });
+                    // Parse response data
                     const data = await response.json();
 
+                    // Display any errors
                     if (data.err) {
-                        const emailError = document.querySelector('.emailError');
-                        const passwordError = document.querySelector('.passwordError');
                         emailError.textContent = data.err.email;
                         passwordError.textContent = data.err.password;
                     }
 
+                    // Redirect user on success
                     if (data.redirect) {
                         location.assign(data.redirect);
                     }
