@@ -7,9 +7,6 @@ const cookieParser = require('cookie-parser');
 const { storeUserIfAuth } = require('./middleware/jwtMiddleware');
 
 
-// Router
-const authRouter = require('./routes/authRouter');
-
 // Initialise app
 const app = express();
 
@@ -20,6 +17,9 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
     app.listen(3000, () => console.log('Server is listening on port 3000...'));
   })
   .catch(error => console.log('Database connection error' + error));
+
+  // Router
+const authRouter = require('./routes/authRouter');
 
 // Set view engine
 app.set('views', './public/views');
