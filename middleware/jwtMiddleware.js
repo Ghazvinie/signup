@@ -28,7 +28,7 @@ function isUserAuth(req, res, next) {
             if (err) {
                 // Verification fails, redirect to signin
                 req.session.notSignedIn = true;
-                res.redirect('/auth/signin');
+                res.status(401).redirect('/auth/signin');
             } else {
                 // Verification passes, call next middleware
                 next();
@@ -37,7 +37,7 @@ function isUserAuth(req, res, next) {
     } else {
         // Token doesn't exist (verifcation fails), redirect to signin
         req.session.notSignedIn = true;
-        res.redirect('/auth/signin');
+        res.status(401).redirect('/auth/signin');
     }
 }
 
