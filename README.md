@@ -7,6 +7,7 @@ The app allows a user to sign up and access a protected resource.
 - User can then sign in.
 - On successful user authentication, user is provided a JWT, authorising access to a dashboard.
 - Dashboard allows user to change their password.
+- The user can sign out, clearing the JWT and their session.
 - CSRF tokens are used to make sure user POST requests are genuine.
 
 ### Built with:
