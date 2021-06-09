@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const { generateJWT } = require('../middleware/jwtMiddleware');
 
 
-// User sign up GET
+// GET sign up page, send in csrf token
 function signUpGet(req, res) {
     res.status(200).render('signUp', { csrfToken: req.csrfToken() });
 }
 
-// User sign up POST
+// Process sign up POST form 
 async function signUpPost(req, res) {
 
     // Get form data
@@ -20,20 +20,18 @@ async function signUpPost(req, res) {
     try {
         // Save user to database
         const user = await UserModel.create({ username, email, password, isAdmin });
-        // Set redirect url
         const redirect = '/auth/signin';
         // Store username in flash
         req.flash('user', user.username);
         res.status(201).json({ redirect });
     } catch (error) {
-        // Error with saving to database
         const err = errorHandler(error);
-        // Pass error on
+        // Send error for page to display to user
         res.status(400).json({ err });
     }
 }
 
-// User sign in GET
+// GET sign in page, send in csrf token
 async function signInGet(req, res) {
     // Set notSignedIn to false for any falsey value
     const notSignedIn = req.session.notSignedIn ? true : false;
@@ -44,7 +42,7 @@ async function signInGet(req, res) {
 
 }
 
-// User sign in POST
+// Process sign in POST form 
 async function signInPost(req, res) {
     const { usernameEmail, password } = req.body;
     // Allow for searching by username or email
@@ -59,10 +57,9 @@ async function signInPost(req, res) {
             const userValid = await bcrypt.compare(password, user.password);
             // If passwords match
             if (userValid) {
-                // Set redirect url
                 const redirect = '/auth/dashboard';
                 const { _id, username } = user;
-                // Generate JWT for user
+                // Generate JWT for user with _id
                 const token = generateJWT(_id);
                 // Store JWT in cookie
                 res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 3600 * 1000, sameSite: 'lax' });
@@ -70,28 +67,26 @@ async function signInPost(req, res) {
                 req.flash('userDetails', username);
                 res.status(200).json({ redirect });
             } else {
-                // Password invalid
                 throw Error('Incorrect password');
             }
         } else {
-            // User doesn't exist / incorrect username or password
             throw Error('Incorrect username or email');
         }
     } catch (error) {
-        // Handles error
         const err = errorHandler(error);
-        // Pass error on
+        // Send error for page to display to user
         res.json({ err });
     }
 }
 
-// Dashboard GET
+// GET dashaboard page, send in csrf token
 function dashboardGet(req, res) {
     res.render('dashboard', { message: req.flash('userDetails'), csrfToken: req.csrfToken() });
 }
 
 // Dashboard POST - change password
 async function changePasswordPost(req, res) {
+    // Get the old and new password from the form, and get the user _id that has been stored in locals
     const { oldPassword, newPassword } = req.body;
     const { _id } = res.locals.user;
 
