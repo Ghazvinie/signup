@@ -15,11 +15,10 @@ async function signUpPost(req, res) {
 
     // Get form data
     const { username, email, password } = req.body;
-    const isAdmin = req.body.isAdmin ? true : false;
 
     try {
         // Save user to database
-        const user = await UserModel.create({ username, email, password, isAdmin });
+        const user = await UserModel.create({ username, email, password });
         const redirect = '/auth/signin';
         // Store username in flash
         req.flash('user', user.username);

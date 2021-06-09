@@ -22,11 +22,6 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Password required'],
         minLength: [6, 'Password must be at least 6 characters long'],
         maxLength: [25, 'Password length exceeded']
-    },
-
-    isAdmin: {
-        type: Boolean,
-        default: false
     }
 });
 
