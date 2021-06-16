@@ -12,7 +12,7 @@ The app allows a user to sign up and access a protected resource.
 
 ### Built with:
 - JavaScript
-- NodeJs 10.19.0 / Express 4.17.1
+- NodeJs 16.1.0 / Express 4.17.1
 - HTML / CSS
 - MongoDB / Mongoose 5.12.12
 
