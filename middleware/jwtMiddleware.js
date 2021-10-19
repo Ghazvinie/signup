@@ -1,10 +1,15 @@
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const UserModel = require('../models/userSchema');
 
 // Access private and public keys
-const privateKey = fs.readFileSync('./keys/private.key', 'utf8');
-const publicKey = fs.readFileSync('./keys/public.key', 'utf8');
+// const privateKey = fs.readFileSync('./keys/private.key', 'utf8');
+// const publicKey = fs.readFileSync('./keys/public.key', 'utf8');
+
+// For Heroku deploy
+const privateKey = process.env.PRIVATE_KEY;
+const publicKey = process.env.PUBLIC_KEY;
 
 // Generate JWT for user on route which this called
 function generateJWT(id) {
