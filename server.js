@@ -10,11 +10,13 @@ const { storeUserIfAuth } = require('./middleware/jwtMiddleware');
 // Initialise app
 const app = express();
 
+const PORT = process.env.PORT || 3001
+
 // Connect to DB and server listen
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
     console.log('Connected to the database...');
-    app.listen(3000, () => console.log('Server is listening on port 3000...'));
+    app.listen(PORT, () => console.log(`Server is listening on port ${PORT}...`));
   })
   .catch(error => console.log('Database connection error' + error));
 
@@ -60,3 +62,6 @@ app.get('/', (req, res) => {
 // /auth routes
 app.use('/auth', authRouter);
 
+app.get('*', (req, res) => {
+  res.render('index');
+});
