@@ -11,7 +11,7 @@ The app allows a user to sign up and access a protected resource.
 - CSRF tokens are used to make sure user POST requests are genuine.
 
 ### Built with:
-- NodeJs 14.18.1 / Express 4.17.1
+- Node.js 14.18.1 / Express 4.17.1
 - MongoDB / Mongoose 5.12.12
 
 ### To run:
